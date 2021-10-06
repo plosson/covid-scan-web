@@ -1,0 +1,183 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Covid Scan Web</title>
+    <meta name="description" content="Covid Scan Web">
+    <meta name="author" content="Covid Scan Web">
+
+    <meta property="og:title" content="Covid Scan Web">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://covid-scan.link/">
+    <meta property="og:description" content="Covid Scan Web">
+    <meta property="og:image" content="image.png">
+
+    <link rel="icon" type="image/png" sizes="32x32" href="/public/img/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/public/img/favicon-16x16.png">
+    <link rel="icon" type="image/png" sizes="152x152" href="/public/img/favicon-152x152.png">
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
+    <link rel="apple-touch-icon" href="/public/img/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="/public/img/touch-icon-ipad.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="/public/img/touch-icon-iphone-retina.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/public/img/touch-icon-ipad-retina.png">
+    <meta name="application-name" content="CovidScan - The official Belgian app to scan and validate EU Digital COVID-certificates"/>
+
+    <link href="//unpkg.com/tailwindcss@^2/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600&display=swap"
+          rel="stylesheet">
+    <script src="/bundle.js"></script>
+    <script src="/public/js/html5-qrcode.min.js" type="text/javascript"></script>
+    <script type="text/javascript">
+        var html5QrCode = null;
+        var cameraId = null;
+
+        function data() {
+            return {
+                "debug": false,
+                "page": location.hash,
+                "scanEnabled": true,
+                "locked": true,
+                "found": false,
+                "pass": {
+                    "v": [{
+                        "co": "BE",
+                        "dt": "2021-07-21",
+                        "dn": 1,
+                        "sd": 1,
+                        "daysAgo": 43,
+                        "name": "Comirnaty"
+                    }],
+                    "t": [{"daysAgo": 43}],
+                    "r": [{"daysAgo": 43}],
+                    "dob": "1975-01-01",
+                    "dob_str": "January 1st 1975",
+                    "age": 45,
+                    "nam": {
+                        "fn": "Denver2",
+                        "gn": "John",
+                        "fnt": "DENVER",
+                        "gnt": "JOHN"
+                    }
+                },
+                "cameraId": "",
+                "changePage": function () {
+                    this.page = location.hash;
+                    if (this.page === '') {
+                        console.log("start scanning again");
+                        this.scanEnabled = true;
+                    }
+                },
+                "init": function () {
+                    // This method will trigger user permissions
+                    Html5Qrcode.getCameras().then(devices => {
+                        //console.log(devices);
+                        if (devices && devices.length) {
+                            {
+                                this.cameraId = devices[devices.length - 1].id;
+                                this.startScanning();
+                            }
+                        }
+                    }).catch(err => {
+                        console.log(err);
+                    });
+
+                },
+                "restartScanning": function () {
+                    this.locked = true;
+                    window.location.hash = '#';
+                },
+                "stopScanning": function () {
+                    html5QrCode.stop().then(ignore => {
+                        // QR Code scanning is stopped.
+                        console.log("QR Code scanning stopped.");
+                    }).catch(err => {
+                        // Stop failed, handle it.
+                        console.log("Unable to stop scanning." + err);
+                    });
+                },
+                "startScanning": function () {
+                    console.log('scanning started with ' + this.cameraId)
+                    // Create instance of the object. The only argument is the "id" of HTML element created above.
+                    html5QrCode = new Html5Qrcode("videoContainer", {formatsToSupport: [Html5QrcodeSupportedFormats.QR_CODE]});
+
+                    html5QrCode.start(this.cameraId,
+                        {
+                            fps: 10,
+                            //qrbox: (window.screen.width * window.devicePixelRatio * 0.75) | 0,
+                            rememberLastUsedCamera: true,
+                            aspectRatio: getAspectRatio()
+                        },
+                        decodedText => {
+                            try {
+                                console.log(`QR Code detected: ${decodedText}`);
+                                this.found = true;
+                                const result = dgc.decodeDGC(decodedText);
+                                if (result.valid) {
+                                    this.pass = result.json;
+                                }
+                                setTimeout(function () {
+                                    this.found = false;
+                                }.bind(this), 3000);
+                            } catch (e) {
+                                console.log(e);
+                            }
+                        },
+                        errorMessage => {
+                            // parse error, ideally ignore it. For example:
+                            //console.log(`QR Code no longer in front of camera.`);
+                            //this.found = false;
+                        })
+                        .catch(err => {
+                            // Start failed, handle it. For example,
+                            console.log(`Unable to start scanning, error: ${err}`);
+                        });
+
+                }
+            }
+        }
+
+        function getAspectRatio() {
+            const realWidth = window.screen.width * window.devicePixelRatio;
+            const realHeight = window.screen.height * window.devicePixelRatio;
+            const aspectRatio = realHeight / realWidth;
+            console.log(`Your screen resolution is: ${realWidth} x ${realHeight}`);
+            console.log(`Your aspect ration is: ${aspectRatio}`);
+            return aspectRatio;
+        }
+    </script>
+    <script src="//unpkg.com/alpinejs" type="text/javascript" defer></script>
+</head>
+
+<body x-data="data" @hashchange.window="changePage()" id="body" class="flex flex-col">
+<header class="sticky top-0 z-50 flex flex-col bg-white p-2 font-medium">
+    <div class="flex flex-row">
+        <div class="flex-1 text-center text-lg" x-show="found">
+            <p class="text-center text-lg font-bold"><span x-text="pass.nam.gn"></span> <span
+                x-text="pass.nam.fn"></span></p>
+        </div>
+        <div class="flex-1 text-center text-lg" x-show="!found">
+            <p class="text-center text-lg font-bold">Scan a QR code</p>
+        </div>
+    </div>
+    <div x-show="found && pass.v[0]" class="bg-green-200">
+        <p class="text-center text-base"><span x-text="pass.age"></span> y. / Vax <span x-text="pass.v[0].name"></span></p>
+    </div>
+    <div x-show="found && pass.r[0]" class="bg-green-200">
+        <p class="text-center text-base"><span x-text="pass.age"></span> y. / Recovered <span x-text="pass.r[0].daysAgo"></span> days ago</p>
+    </div>
+    <div x-show="found && pass.t[0]" class="bg-green-200">
+        <p class="text-center text-base"><span x-text="pass.age"></span> y. / Tested <span x-text="pass.t[0].daysAgo"></span> days ago</p>
+    </div>
+</header>
+<main class="photo flex-1 overflow-y-auto bg-black" id="videoContainer"></main>
+</body>
+</html>
+
+
+
+
