@@ -111,7 +111,12 @@ function makeid(length) {
 
 function encodeDGC(obj) {
     // patch with dummy data to make the QR code look like a real DGC with lots of data
-    return "HC2: " + JSON.stringify(obj) + "|" + makeid(500);
+    obj.date = moment().format('YYYY-MM-DD');
+    obj.type = obj.purpose.substr(0, 1).toUpperCase() + 'ST';
+    const data = "HC2: " + JSON.stringify(obj) + "|" + makeid(10);
+    console.log(data.length);
+    return data;
+
 }
 
 function decodeDGC(data) {
@@ -123,8 +128,11 @@ function decodeDGC(data) {
         // cool a fun DGC !
         const pass = JSON.parse(data.substr(4, data.indexOf('|') - 4));
         json = {
+            "type":"f",
             "f": [{
-                "p": pass.purpose
+                "t": pass.type,
+                "p": pass.purpose,
+                "dt": pass.date
             }],
             "dob": moment().format('YYYY-MM-DD'),
             "nam": {
@@ -136,7 +144,8 @@ function decodeDGC(data) {
         };
         json.age = moment().diff(json.dob, 'years', false);
         json.dob_str = moment(json.dob).format('MMMM Do YYYY');
-        return json;
+        json.f[0].daysAgo = moment().diff(json.f[0].dt, 'days', false)
+        return {"valid": true, "json": json};
 
     } else if (prefix === "HC1") {
         // Remove `HC1:` from the string
@@ -164,15 +173,18 @@ function decodeDGC(data) {
         if (json.v) {
             json.v[0].daysAgo = moment().diff(json.v[0].dt, 'days', false)
             json.v[0].name = vaccines.valueSetValues[json.v[0].mp].display;
+            json.type = "v";
         }
         if (json.r) {
             json.r[0].daysAgo = moment().diff(json.r[0].fr, 'days', false)
+            json.type = "r";
         }
         if (json.t) {
             json.t[0].daysAgo = moment().diff(json.t[0].sc, 'days', false)
+            json.type = "t";
         }
 
-        return {"valid": true, "json": greenpassData[0].get(-260).get(1)};
+        return {"valid": true, "json": json};
     } else {
         return {"valid": false};
     }

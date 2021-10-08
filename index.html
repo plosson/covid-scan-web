@@ -44,6 +44,7 @@
                 "locked": true,
                 "found": false,
                 "pass": {
+                    "type": "",
                     "v": [{
                         "co": "BE",
                         "dt": "2021-07-21",
@@ -54,6 +55,7 @@
                     }],
                     "t": [{"daysAgo": 43}],
                     "r": [{"daysAgo": 43}],
+                    "f": [{"daysAgo": 0}],
                     "dob": "1975-01-01",
                     "dob_str": "January 1st 1975",
                     "age": 45,
@@ -122,6 +124,7 @@
                                 }
                                 setTimeout(function () {
                                     this.found = false;
+                                    this.pass = {};
                                 }.bind(this), 3000);
                             } catch (e) {
                                 console.log(e);
@@ -158,20 +161,23 @@
     <div class="flex flex-row">
         <div class="flex-1 text-center text-lg" x-show="found">
             <p class="text-center text-lg font-bold"><span x-text="pass.nam.gn"></span> <span
-                x-text="pass.nam.fn"></span></p>
+                x-text="pass.nam.fn"></span> <span x-text="pass.type"></span></p>
         </div>
         <div class="flex-1 text-center text-lg" x-show="!found">
             <p class="text-center text-lg font-bold">Scan a QR code</p>
         </div>
     </div>
-    <div x-show="found && pass.v[0]" class="bg-green-200">
+    <div x-show="pass.type == 'v'" class="bg-green-200">
         <p class="text-center text-base"><span x-text="pass.age"></span> y. / Vax <span x-text="pass.v[0].name"></span><br/><span x-text="pass.v[0].daysAgo"></span> days ago</p>
     </div>
-    <div x-show="found && pass.r[0]" class="bg-blue-200">
+    <div x-show="pass.type == 'r'" class="bg-blue-200">
         <p class="text-center text-base"><span x-text="pass.age"></span> y. / Recovered <span x-text="pass.r[0].daysAgo"></span> days ago</p>
     </div>
-    <div x-show="found && pass.t[0]" class="bg-pink-200">
+    <div x-show="pass.type == 't'" class="bg-pink-200">
         <p class="text-center text-base"><span x-text="pass.age"></span> y. / Tested <span x-text="pass.t[0].daysAgo"></span> days ago</p>
+    </div>
+    <div x-show="pass.type == 'f'" class="bg-yellow-200">
+        <p class="text-center text-base">Valid <span x-text="pass.f[0].t"></span> for <span x-text="pass.f[0].p"></span> created <span x-text="pass.t[0].daysAgo"></span> days ago</p>
     </div>
 </header>
 <main class="photo flex-1 overflow-y-auto bg-black" id="videoContainer"></main>

@@ -41,14 +41,15 @@
                     "lastName": "Denver",
                     "purpose": "Beer",
                 },
+                "form": true,
                 "complete": function () {
                     return this.pass.firstName && this.pass.lastName && this.pass.purpose;
                 },
                 "cst": function () {
                     if (this.pass.purpose) {
-                        return this.pass.purpose.substr(0, 1).toUpperCase();
+                        return this.pass.purpose.substr(0, 1).toUpperCase() + "ST";
                     } else {
-                        return "C";
+                        return "CST";
                     }
                 },
                 "generate": function () {
@@ -57,7 +58,7 @@
                     console.log(dgc.decodeDGC(text));
                     document.getElementById("qrcode").innerHTML = "";
                     this.qrcode = new QRCode(document.getElementById("qrcode"), {
-                        text: text,
+                        text: dgc.encodeDGC(this.pass),
                         width: 300,
                         height: 300,
                         colorDark: "#000000",
@@ -65,14 +66,15 @@
                         correctLevel: QRCode.CorrectLevel.H
                     });
 
+                    this.form = false;
                     setTimeout(() => {
                         let qelem = document.querySelector('#qrcode img')
                         let dlink = document.querySelector('#qrdl')
                         let qr = qelem.getAttribute('src');
                         dlink.setAttribute('href', qr);
-                        dlink.setAttribute('download', "test.png");
+                        dlink.setAttribute('download', this.cst() + ".png");
                         dlink.removeAttribute('hidden');
-                    }, 500);
+                    }, 100);
                 },
                 "init": function () {
                 },
@@ -99,7 +101,7 @@
     </div>
 </header>
 <main class="photo flex-1 overflow-y-auto bg-white">
-    <div class="w-full max-w-xs">
+    <div id="form" class="w-full" x-show="form">
         <form class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
             <div class="mb-4">
                 <label class="block text-gray-700 text-sm font-bold mb-2" for="firstName">
@@ -115,23 +117,30 @@
                 <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                        id="lastName" type="text" placeholder="Denver" x-model="pass.lastName">
             </div>
-            <div class="mb-4">
+            <div class="mb-6">
                 <label class="block text-gray-700 text-sm font-bold mb-2" for="purpose">
                     What do I want ?
                 </label>
                 <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                        id="purpose" type="text" placeholder="Beer" x-model="pass.purpose">
             </div>
-            <div class="mb-4" x-show="complete()">
+            <div class="mt-2" x-show="complete()">
                 <a href="#" x-on:click="generate"
-                   class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Generate my <span
-                        x-text="cst"></span>ST</a>
+                   class="content-center bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Generate
+                    my <span
+                            x-text="cst"></span></a>
             </div>
         </form>
     </div>
-    <div id="qrcode"></div>
-    <div id="download" class="mt-5">
-        <a class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" id="qrdl" hidden>Download</a>
+    <div id="result" x-show="!form" class="p-4 flex flex-col items-center">
+        <div id="qrcode"></div>
+        <div id="download" class="mt-5">
+            <a class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" id="qrdl"
+               hidden>Download</a>
+        </div>
+        <div class="mt-5">
+            <a href="#" x-on:click="form=true">Back</a>
+        </div>
     </div>
 </main>
 </body>
