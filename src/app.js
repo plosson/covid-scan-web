@@ -98,12 +98,47 @@ var vaccines = {
     }
 }
 
-export function decodeDGC(data) {
+function makeid(length) {
+    var result = '';
+    var characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    var charactersLength = characters.length;
+    for (var i = 0; i < length; i++) {
+        result += characters.charAt(Math.floor(Math.random() *
+            charactersLength));
+    }
+    return result;
+}
+
+function encodeDGC(obj) {
+    // patch with dummy data to make the QR code look like a real DGC with lots of data
+    return "HC2: " + JSON.stringify(obj) + "|" + makeid(500);
+}
+
+function decodeDGC(data) {
 
     // check prefix
     const prefix = data.substr(0, data.indexOf(':'));
 
-    if (prefix === "HC1") {
+    if (prefix === 'HC2') {
+        // cool a fun DGC !
+        const pass = JSON.parse(data.substr(4, data.indexOf('|') - 4));
+        json = {
+            "f": [{
+                "p": pass.purpose
+            }],
+            "dob": moment().format('YYYY-MM-DD'),
+            "nam": {
+                "fn": pass.lastName,
+                "gn": pass.firstName,
+                "fnt": pass.lastName.toUpperCase(),
+                "gnt": pass.firstName.toUpperCase()
+            }
+        };
+        json.age = moment().diff(json.dob, 'years', false);
+        json.dob_str = moment(json.dob).format('MMMM Do YYYY');
+        return json;
+
+    } else if (prefix === "HC1") {
         // Remove `HC1:` from the string
         const greenpassBody = data.substr(4);
 
@@ -123,29 +158,27 @@ export function decodeDGC(data) {
         const greenpassData = cbor.decodeAllSync(cbor_data);
         var json = greenpassData[0].get(-260).get(1);
 
-        console.log(json);
         // add age
-        json.age = moment().diff(json.dob,'years',false);
+        json.age = moment().diff(json.dob, 'years', false);
         json.dob_str = moment(json.dob).format('MMMM Do YYYY');
-        if (json.v)
-        {
-            json.v[0].daysAgo = moment().diff(json.v[0].dt,'days',false)
+        if (json.v) {
+            json.v[0].daysAgo = moment().diff(json.v[0].dt, 'days', false)
             json.v[0].name = vaccines.valueSetValues[json.v[0].mp].display;
         }
-        if (json.r)
-        {
-            json.r[0].daysAgo = moment().diff(json.r[0].fr,'days',false)
+        if (json.r) {
+            json.r[0].daysAgo = moment().diff(json.r[0].fr, 'days', false)
         }
-        if (json.t)
-        {
-            json.t[0].daysAgo = moment().diff(json.t[0].sc,'days',false)
+        if (json.t) {
+            json.t[0].daysAgo = moment().diff(json.t[0].sc, 'days', false)
         }
 
-        return {"valid":true, "json": greenpassData[0].get(-260).get(1)};
+        return {"valid": true, "json": greenpassData[0].get(-260).get(1)};
     } else {
-        return {"valid":false};
+        return {"valid": false};
     }
 }
+
+export {decodeDGC, encodeDGC}
 
 
 

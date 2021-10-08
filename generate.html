@@ -1,0 +1,142 @@
+<!doctype html>
+
+<html lang="en" xmlns:x-on="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Covid Scan Web</title>
+    <meta name="description" content="Covid Scan Web">
+    <meta name="author" content="Covid Scan Web">
+
+    <meta property="og:title" content="Covid Scan Web">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://covid-scan.link/">
+    <meta property="og:description" content="Scan CST and DGC QR codes without any application">
+    <meta property="og:image" content="/public/img/favicon-152x152.png">
+
+    <link rel="icon" type="image/png" sizes="32x32" href="/public/img/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/public/img/favicon-16x16.png">
+    <link rel="icon" type="image/png" sizes="152x152" href="/public/img/favicon-152x152.png">
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
+    <link rel="apple-touch-icon" href="/public/img/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="/public/img/touch-icon-ipad.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="/public/img/touch-icon-iphone-retina.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/public/img/touch-icon-ipad-retina.png">
+    <meta name="application-name"
+          content="CovidScan - The official Belgian app to scan and validate EU Digital COVID-certificates"/>
+
+    <link href="//unpkg.com/tailwindcss@^2/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600&display=swap"
+          rel="stylesheet">
+    <script src="/bundle.js"></script>
+    <script src="//cdn.rawgit.com/davidshimjs/qrcodejs/gh-pages/qrcode.min.js"></script>
+    <script type="text/javascript">
+        function data() {
+            return {
+                "pass": {
+                    "firstName": "John",
+                    "lastName": "Denver",
+                    "purpose": "Beer",
+                },
+                "complete": function () {
+                    return this.pass.firstName && this.pass.lastName && this.pass.purpose;
+                },
+                "cst": function () {
+                    if (this.pass.purpose) {
+                        return this.pass.purpose.substr(0, 1).toUpperCase();
+                    } else {
+                        return "C";
+                    }
+                },
+                "generate": function () {
+                    const text = dgc.encodeDGC(this.pass);
+                    console.log(text);
+                    console.log(dgc.decodeDGC(text));
+                    document.getElementById("qrcode").innerHTML = "";
+                    this.qrcode = new QRCode(document.getElementById("qrcode"), {
+                        text: text,
+                        width: 300,
+                        height: 300,
+                        colorDark: "#000000",
+                        colorLight: "#ffffff",
+                        correctLevel: QRCode.CorrectLevel.H
+                    });
+
+                    setTimeout(() => {
+                        let qelem = document.querySelector('#qrcode img')
+                        let dlink = document.querySelector('#qrdl')
+                        let qr = qelem.getAttribute('src');
+                        dlink.setAttribute('href', qr);
+                        dlink.setAttribute('download', "test.png");
+                        dlink.removeAttribute('hidden');
+                    }, 500);
+                },
+                "init": function () {
+                },
+            }
+        }
+
+        function makeid(length) {
+            var result = '';
+            var characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+            var charactersLength = characters.length;
+            for (var i = 0; i < length; i++) {
+                result += characters.charAt(Math.floor(Math.random() *
+                    charactersLength));
+            }
+            return result;
+        }
+    </script>
+    <script src="//unpkg.com/alpinejs" type="text/javascript" defer></script>
+</head>
+
+<body x-data="data" id="body" class="flex flex-col">
+<header class="sticky top-0 z-50 flex flex-col bg-white p-2 font-medium">
+    <div class="flex flex-row">
+    </div>
+</header>
+<main class="photo flex-1 overflow-y-auto bg-white">
+    <div class="w-full max-w-xs">
+        <form class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+            <div class="mb-4">
+                <label class="block text-gray-700 text-sm font-bold mb-2" for="firstName">
+                    First Name
+                </label>
+                <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                       id="firstName" type="text" placeholder="John" x-model="pass.firstName">
+            </div>
+            <div class="mb-4">
+                <label class="block text-gray-700 text-sm font-bold mb-2" for="lastName">
+                    Last Name
+                </label>
+                <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                       id="lastName" type="text" placeholder="Denver" x-model="pass.lastName">
+            </div>
+            <div class="mb-4">
+                <label class="block text-gray-700 text-sm font-bold mb-2" for="purpose">
+                    What do I want ?
+                </label>
+                <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                       id="purpose" type="text" placeholder="Beer" x-model="pass.purpose">
+            </div>
+            <div class="mb-4" x-show="complete()">
+                <a href="#" x-on:click="generate"
+                   class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Generate my <span
+                        x-text="cst"></span>ST</a>
+            </div>
+        </form>
+    </div>
+    <div id="qrcode"></div>
+    <div id="download" class="mt-5">
+        <a class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" id="qrdl" hidden>Download</a>
+    </div>
+</main>
+</body>
+</html>
+
+
+
+
