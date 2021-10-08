@@ -68,7 +68,7 @@
                 "changePage": function () {
                     this.page = location.hash;
                     if (this.page === '') {
-                        console.log("start scanning again");
+                        //console.log("start scanning again");
                         this.scanEnabled = true;
                     }
                 },
@@ -94,14 +94,14 @@
                 "stopScanning": function () {
                     html5QrCode.stop().then(ignore => {
                         // QR Code scanning is stopped.
-                        console.log("QR Code scanning stopped.");
+                        //console.log("QR Code scanning stopped.");
                     }).catch(err => {
                         // Stop failed, handle it.
-                        console.log("Unable to stop scanning." + err);
+                        //console.log("Unable to stop scanning." + err);
                     });
                 },
                 "startScanning": function () {
-                    console.log('scanning started with ' + this.cameraId)
+                    //console.log('scanning started with ' + this.cameraId)
                     // Create instance of the object. The only argument is the "id" of HTML element created above.
                     html5QrCode = new Html5Qrcode("videoContainer", {formatsToSupport: [Html5QrcodeSupportedFormats.QR_CODE]});
 
@@ -114,7 +114,7 @@
                         },
                         decodedText => {
                             try {
-                                console.log(`QR Code detected: ${decodedText}`);
+                                //console.log(`QR Code detected: ${decodedText}`);
                                 this.found = true;
                                 const result = dgc.decodeDGC(decodedText);
                                 if (result.valid) {
@@ -165,12 +165,12 @@
         </div>
     </div>
     <div x-show="found && pass.v[0]" class="bg-green-200">
-        <p class="text-center text-base"><span x-text="pass.age"></span> y. / Vax <span x-text="pass.v[0].name"></span></p>
+        <p class="text-center text-base"><span x-text="pass.age"></span> y. / Vax <span x-text="pass.v[0].name"></span><br/><span x-text="pass.v[0].daysAgo"></span> days ago</p>
     </div>
-    <div x-show="found && pass.r[0]" class="bg-green-200">
+    <div x-show="found && pass.r[0]" class="bg-blue-200">
         <p class="text-center text-base"><span x-text="pass.age"></span> y. / Recovered <span x-text="pass.r[0].daysAgo"></span> days ago</p>
     </div>
-    <div x-show="found && pass.t[0]" class="bg-green-200">
+    <div x-show="found && pass.t[0]" class="bg-pink-200">
         <p class="text-center text-base"><span x-text="pass.age"></span> y. / Tested <span x-text="pass.t[0].daysAgo"></span> days ago</p>
     </div>
 </header>
