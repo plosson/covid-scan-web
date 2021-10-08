@@ -33,6 +33,7 @@ module.exports = {
                 {from: "*.html"},
                 {from: "public/js/*.js"},
                 {from: "public/img/*.png"},
+                {from: "public/img/*.svg"},
                 {from: "public/img/*.ico"},
             ],
         }),
