@@ -3,6 +3,7 @@ const base45 = require('base45');
 const cbor = require('cbor-web');
 const pako = require('pako');
 const moment = require('moment');
+const {uniqueNamesGenerator, countries, languages, animals} = require('unique-names-generator');
 
 import './style.css';
 
@@ -109,6 +110,16 @@ function makeid(length) {
     return result;
 }
 
+function randomName() {
+    const random = Math.floor(Math.random() * 2);
+    if (random === 1) {
+        name =  uniqueNamesGenerator({dictionaries: [animals]});
+    } else {
+        name = uniqueNamesGenerator({dictionaries: [countries]});
+    }
+    return capitalizeFirstLetter(name);
+}
+
 function encodeDGC(obj) {
     // patch with dummy data to make the QR code look like a real DGC with lots of data
     obj.date = moment().format('YYYY-MM-DD');
@@ -128,7 +139,7 @@ function decodeDGC(data) {
         // cool a fun DGC !
         const pass = JSON.parse(data.substr(4, data.indexOf('|') - 4));
         json = {
-            "type":"f",
+            "type": "f",
             "f": [{
                 "t": pass.type,
                 "p": pass.purpose,
@@ -190,7 +201,12 @@ function decodeDGC(data) {
     }
 }
 
-export {decodeDGC, encodeDGC}
+function capitalizeFirstLetter(string) {
+    return string.charAt(0).toUpperCase() + string.slice(1);
+}
+
+
+export {randomName, decodeDGC, encodeDGC}
 
 
 
