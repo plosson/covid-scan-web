@@ -64,8 +64,8 @@
                     document.getElementById("qrcode-large").innerHTML = "";
                     this.qrcode = new QRCode(document.getElementById("qrcode"), {
                         text: dgc.encodeDGC(this.pass),
-                        width: 300,
-                        height: 300,
+                        width: 200,
+                        height: 200,
                         colorDark: "#000000",
                         colorLight: "#ffffff",
                         correctLevel: QRCode.CorrectLevel.H
@@ -128,7 +128,13 @@
     </script>
     <script src="//unpkg.com/alpinejs" type="text/javascript" defer></script>
     <style type="text/css">
-        #qr-content, #qr-content-large {
+        #qr-content{
+            max-height: 150px;
+            max-width: 150px;
+            position: relative;
+        }
+
+        #qr-content-large {
             max-height: 500px;
             max-width: 500px;
             position: relative;
@@ -184,7 +190,7 @@
 </div>
 <div id="qr" x-show="view=='qr'" class="p-4 flex flex-col items-center bg-green-50 h-screen">
     <div class=""><span x-text="cst"></span></div>
-    <div id="qr-content">
+    <div id="qr-content" class="w-7/12">
         <div id="bm"></div>
         <div id="qrcode" class="w-7/12" x-on:click="view='details'"></div>
     </div>
