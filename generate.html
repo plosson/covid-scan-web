@@ -37,8 +37,6 @@
     <script type="text/javascript">
         function data() {
             return {
-                "examples": ["Beer", "Pita", "Durum", "Wine", "Vodka"],
-                "exampleIndex": 0,
                 "pass": {
                     "firstName": "",
                     "lastName": "",
@@ -58,8 +56,6 @@
                 },
                 "generate": function () {
                     const text = dgc.encodeDGC(this.pass);
-                    console.log(text);
-                    console.log(dgc.decodeDGC(text));
                     document.getElementById("qrcode").innerHTML = "";
                     document.getElementById("qrcode-large").innerHTML = "";
                     this.qrcode = new QRCode(document.getElementById("qrcode"), {
