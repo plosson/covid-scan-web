@@ -32,6 +32,7 @@ module.exports = {
             patterns: [
                 {from: "*.html"},
                 {from: "public/js/*.js"},
+                {from: "public/json/*.json"},
                 {from: "public/img/*.png"},
                 {from: "public/img/*.svg"},
                 {from: "public/img/*.ico"},
