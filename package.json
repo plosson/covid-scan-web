@@ -31,7 +31,8 @@
     "moment": "^2.29.1",
     "moment-locales-webpack-plugin": "^1.2.0",
     "punycode": "^2.1.1",
-    "tailwindcss": "^2.2.15"
+    "tailwindcss": "^2.2.15",
+    "faker": "^5.5.3"
   },
   "babel": {
     "presets": [
@@ -39,6 +40,5 @@
     ]
   },
   "dependencies": {
-    "unique-names-generator": "^4.6.0"
   }
 }

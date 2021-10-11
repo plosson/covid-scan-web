@@ -3,7 +3,7 @@ const base45 = require('base45');
 const cbor = require('cbor-web');
 const pako = require('pako');
 const moment = require('moment');
-const {uniqueNamesGenerator, countries, languages, animals} = require('unique-names-generator');
+const faker = require('faker');
 
 import './style.css';
 
@@ -111,13 +111,7 @@ function makeid(length) {
 }
 
 function randomName() {
-    const random = Math.floor(Math.random() * 2);
-    if (random === 1) {
-        name =  uniqueNamesGenerator({dictionaries: [animals]});
-    } else {
-        name = uniqueNamesGenerator({dictionaries: [countries]});
-    }
-    return capitalizeFirstLetter(name);
+    return capitalizeFirstLetter(faker.commerce.product());
 }
 
 function encodeDGC(obj) {
