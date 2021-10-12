@@ -114,6 +114,10 @@ function randomName() {
     return capitalizeFirstLetter(faker.commerce.product());
 }
 
+function formatDate(date, format){
+    return moment(date).format(format);
+}
+
 function encodeDGC(obj) {
     // patch with dummy data to make the QR code look like a real DGC with lots of data
     obj.date = moment().format('YYYY-MM-DD');
@@ -201,7 +205,7 @@ function capitalizeFirstLetter(string) {
 }
 
 
-export {randomName, decodeDGC, encodeDGC}
+export {formatDate, randomName, decodeDGC, encodeDGC}
 
 
 

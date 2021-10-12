@@ -1,4 +1,5 @@
 const path = require('path');
+var HtmlWebpackPlugin = require('html-webpack-plugin');
 const CopyPlugin = require('copy-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const MomentLocalesPlugin = require('moment-locales-webpack-plugin');
@@ -30,13 +31,24 @@ module.exports = {
         }),
         new CopyPlugin({
             patterns: [
-                {from: "*.html"},
                 {from: "public/js/*.js"},
                 {from: "public/json/*.json"},
                 {from: "public/img/*.png"},
                 {from: "public/img/*.svg"},
                 {from: "public/img/*.ico"},
             ],
+        }),
+        new HtmlWebpackPlugin({
+            filename: 'generate.html',
+            template: 'generate.html'
+        }),
+        new HtmlWebpackPlugin({
+            filename: 'index.html',
+            template: 'index.html'
+        }),
+        new HtmlWebpackPlugin({
+            filename: 'index.html',
+            template: 'index.html'
         }),
     ],
     resolve: {

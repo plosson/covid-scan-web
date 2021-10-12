@@ -14,23 +14,8 @@
     <meta property="og:url" content="https://covid-scan.link/">
     <meta property="og:description" content="Scan CST and DGC QR codes without any application">
     <meta property="og:image" content="/public/img/favicon-152x152.png">
-
-    <link rel="icon" type="image/png" sizes="32x32" href="/public/img/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="/public/img/favicon-16x16.png">
-    <link rel="icon" type="image/png" sizes="152x152" href="/public/img/favicon-152x152.png">
-    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
-    <link rel="apple-touch-icon" href="/public/img/apple-touch-icon.png">
-    <link rel="apple-touch-icon" sizes="76x76" href="/public/img/touch-icon-ipad.png">
-    <link rel="apple-touch-icon" sizes="120x120" href="/public/img/touch-icon-iphone-retina.png">
-    <link rel="apple-touch-icon" sizes="152x152" href="/public/img/touch-icon-ipad-retina.png">
-    <meta name="application-name" content="CovidScan - The official Belgian app to scan and validate EU Digital COVID-certificates"/>
-
-    <link href="//unpkg.com/tailwindcss@^2/dist/tailwind.min.css" rel="stylesheet">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600&display=swap"
-          rel="stylesheet">
     <script src="/bundle.js"></script>
+    <%= require('html-loader!./header.html').default %>
     <script src="/public/js/html5-qrcode.min.js" type="text/javascript"></script>
     <script type="text/javascript">
         var html5QrCode = null;
@@ -129,35 +114,32 @@
             const realWidth = window.screen.width * window.devicePixelRatio;
             const realHeight = window.screen.height * window.devicePixelRatio;
             const aspectRatio = realHeight / realWidth;
-            //console.log(`Your screen resolution is: ${realWidth} x ${realHeight}`);
-            //console.log(`Your aspect ration is: ${aspectRatio}`);
             return aspectRatio;
         }
     </script>
-    <script src="//unpkg.com/alpinejs" type="text/javascript" defer></script>
 </head>
 
 <body x-data="data" id="body" class="flex flex-col">
 <header class="sticky top-0 z-50 flex flex-col bg-white p-2 font-medium">
     <div class="flex flex-row">
-        <div class="flex-1 text-center text-lg" x-show="found">
+        <div class="flex-1 text-center text-lg" x-show="found" x-cloak>
             <p class="text-center text-lg font-bold"><span x-text="pass.nam.gn"></span> <span
                 x-text="pass.nam.fn"></span> <span x-text="pass.type"></span></p>
         </div>
-        <div class="flex-1 text-center text-lg" x-show="!found">
+        <div class="flex-1 text-center text-lg" x-show="!found" x-cloak>
             <p class="text-center text-lg font-bold">Scan a QR code</p>
         </div>
     </div>
-    <div x-show="pass.type == 'v'" class="bg-green-200">
+    <div x-show="pass.type == 'v'" class="bg-green-200" x-cloak>
         <p class="text-center text-base"><span x-text="pass.age"></span> y. / Vax <span x-text="pass.v[0].name"></span><br/><span x-text="pass.v[0].daysAgo"></span> days ago</p>
     </div>
-    <div x-show="pass.type == 'r'" class="bg-blue-200">
+    <div x-show="pass.type == 'r'" class="bg-blue-200" x-cloak>
         <p class="text-center text-base"><span x-text="pass.age"></span> y. / Recovered <span x-text="pass.r[0].daysAgo"></span> days ago</p>
     </div>
-    <div x-show="pass.type == 't'" class="bg-pink-200">
+    <div x-show="pass.type == 't'" class="bg-pink-200" x-cloak>
         <p class="text-center text-base"><span x-text="pass.age"></span> y. / Tested <span x-text="pass.t[0].daysAgo"></span> days ago</p>
     </div>
-    <div x-show="pass.type == 'f'" class="bg-yellow-200">
+    <div x-show="pass.type == 'f'" class="bg-yellow-200" x-cloak>
         <p class="text-center text-base">Valid <span x-text="pass.f[0].t"></span> for <span x-text="pass.f[0].p"></span> created <span x-text="pass.f[0].daysAgo"></span> days ago</p>
         <div class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full" id="f-message" x-show="found && pass.type == 'f' && pass.f[0].m">
             <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
@@ -177,6 +159,7 @@
     </div>
 </header>
 <main class="photo flex-1 overflow-y-auto bg-black" id="videoContainer"></main>
+<%= require('html-loader!./footer.html').default %>
 </body>
 </html>
 

@@ -14,32 +14,33 @@
   "devDependencies": {
     "@babel/core": "^7.15.5",
     "@babel/preset-env": "^7.15.6",
+    "alpinejs": "^3.4.0",
     "babel-loader": "^8.2.2",
     "base45": "^3.0.0",
     "buffer": "^6.0.3",
     "cbor-web": "^8.0.1",
     "copy-webpack-plugin": "^6.4.1",
     "css-loader": "^6.3.0",
+    "faker": "^5.5.3",
+    "html-loader": "^2.1.2",
+    "html-webpack-plugin": "^5.3.2",
+    "html5-qrcode": "^2.0.12",
     "jquery": "^3.6.0",
     "mini-css-extract-plugin": "^2.3.0",
-    "pako": "^2.0.4",
-    "style-loader": "^3.3.0",
-    "webpack": "^5.54.0",
-    "webpack-cli": "^4.8.0",
-    "webpack-dev-server": "^4.2.1",
-    "alpinejs": "^3.4.0",
-    "html5-qrcode": "^2.0.12",
     "moment": "^2.29.1",
     "moment-locales-webpack-plugin": "^1.2.0",
+    "pako": "^2.0.4",
     "punycode": "^2.1.1",
+    "style-loader": "^3.3.0",
     "tailwindcss": "^2.2.15",
-    "faker": "^5.5.3"
+    "webpack": "^5.54.0",
+    "webpack-cli": "^4.8.0",
+    "webpack-dev-server": "^4.2.1"
   },
   "babel": {
     "presets": [
       "@babel/preset-env"
     ]
   },
-  "dependencies": {
-  }
+  "dependencies": {}
 }
