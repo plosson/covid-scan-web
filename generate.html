@@ -14,28 +14,33 @@
     <meta property="og:url" content="https://covid-safe.link/">
     <meta property="og:description" content="Generate your own personalized ticket !">
     <meta property="og:image" content="/public/img/favicon-152x152.png">
-
-    <link rel="icon" type="image/png" sizes="32x32" href="/public/img/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="/public/img/favicon-16x16.png">
-    <link rel="icon" type="image/png" sizes="152x152" href="/public/img/favicon-152x152.png">
-    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
-    <link rel="apple-touch-icon" href="/public/img/apple-touch-icon.png">
-    <link rel="apple-touch-icon" sizes="76x76" href="/public/img/touch-icon-ipad.png">
-    <link rel="apple-touch-icon" sizes="120x120" href="/public/img/touch-icon-iphone-retina.png">
-    <link rel="apple-touch-icon" sizes="152x152" href="/public/img/touch-icon-ipad-retina.png">
     <meta name="application-name"
           content="CovidSafe - The unofficial Belgian site to create your personal digital certificates"/>
-
-    <link href="//unpkg.com/tailwindcss@^2/dist/tailwind.min.css" rel="stylesheet">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600&display=swap"
-          rel="stylesheet">
     <script src="/bundle.js"></script>
-    <script src="//cdn.rawgit.com/davidshimjs/qrcodejs/gh-pages/qrcode.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/bodymovin/5.7.13/lottie.min.js" type="text/javascript"></script>
-    <script src="//unpkg.com/@alpinejs/persist@3.x.x/dist/cdn.min.js" type="text/javascript" defer></script>
-    <script src="//unpkg.com/alpinejs@3.x.x" type="text/javascript" defer></script>
+    <link rel="icon" type="image/png" sizes="32x32" href="cac4565562df515771d3.png">
+<link rel="icon" type="image/png" sizes="16x16" href="5dd8cad89b0b6b42298e.png">
+<link rel="icon" type="image/png" sizes="152x152" href="7d5e17338c0bc84a74ac.png">
+<link rel="apple-touch-icon" href="68489b2862bc388bcbca.png">
+<link rel="apple-touch-icon" sizes="76x76" href="2b904d84ea2fe97eba79.png">
+<link rel="apple-touch-icon" sizes="120x120" href="b9a12021214773e63e8a.png">
+<link rel="apple-touch-icon" sizes="152x152" href="8f0284d92eed70f393bf.png">
+
+<link href="//unpkg.com/tailwindcss@^2/dist/tailwind.min.css" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600&display=swap"
+      rel="stylesheet">
+
+<script src="//cdn.rawgit.com/davidshimjs/qrcodejs/gh-pages/qrcode.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bodymovin/5.7.13/lottie.min.js" type="text/javascript"></script>
+<script src="//unpkg.com/tinygesture" type="text/javascript"></script>
+<script src="//unpkg.com/@alpinejs/persist@3.x.x/dist/cdn.min.js" type="text/javascript" defer></script>
+<script src="//unpkg.com/alpinejs@3.x.x" type="text/javascript" defer></script>
+
+<style type="text/css">
+    [x-cloak] { display: none !important; }
+</style>
     <script type="text/javascript">
         function data() {
             return {
@@ -47,7 +52,7 @@
                     "message": ""
                 },
                 "example": "Beer",
-                "view": "form",
+                "page": location.hash,
                 "complete": function () {
                     return this.pass.firstName && this.pass.lastName && this.pass.purpose;
                 },
@@ -58,8 +63,12 @@
                         return "CST";
                     }
                 },
-                "generate": function () {
-                    this.library.push(this.pass);
+                "changePage": function (page) {
+                    location.hash = page;
+                },
+                "showPass": function (index) {
+                    this.pass = this.library[index];
+                    console.log(this.pass);
                     const text = dgc.encodeDGC(this.pass);
                     document.getElementById("qrcode").innerHTML = "";
                     document.getElementById("qrcode-large").innerHTML = "";
@@ -96,8 +105,14 @@
                         autoplay: true,
                         path: '/public/json/qr_code.json'
                     });
-
-                    this.view = 'qr';
+                },
+                "generate": function () {
+                    this.pass.creationDate = new Date();
+                    this.library.push(JSON.parse(JSON.stringify(this.pass)));
+                    this.showPass(this.library.length - 1);
+                },
+                "formatDate": function(date, format){
+                    return dgc.formatDate(date, format);
                 },
                 "init": function () {
                     setInterval(function () {
@@ -120,7 +135,7 @@
         }
     </script>
     <style type="text/css">
-        #qr-content{
+        #qr-content {
             max-height: 150px;
             max-width: 150px;
             position: relative;
@@ -131,10 +146,12 @@
             max-width: 500px;
             position: relative;
         }
+
         #qr-content #bm, #qr-content #bm-large {
             width: 100%;
             height: 100%;
         }
+
         #qrcode, #qrcode-large {
             width: 90%;
             height: 90%;
@@ -143,10 +160,10 @@
             top: 5%;
         }
     </style>
-</head>
+<script defer src="bundle.js"></script></head>
 
-<body x-data="data" id="body" class="flex flex-col h-full">
-<div id="form" class="w-full" x-show="view=='form'">
+<body x-data="data" id="body" class="flex flex-col h-full" @hashchange.window="page = location.hash">
+<div id="form" class="w-full" x-show="page==''" x-cloak>
     <form class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 flex flex-col">
         <div class="mb-4">
             <h1>Generate your <span x-text="example" class="underline font-bold"></span> Safe Ticket</h1>
@@ -180,18 +197,18 @@
                    id="message" type="text" placeholder="Please, please, let me in !!" x-model="pass.message">
         </div>
         <div class="mt-2" x-show="complete()">
-            <a href="#" x-on:click="generate"
+            <a href="#qr" x-on:click="generate"
                class="content-center bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Generate
                 my <span
                         x-text="cst"></span></a>
         </div>
     </form>
 </div>
-<div id="qr" x-show="view=='qr'" class="p-4 flex flex-col items-center bg-green-50 h-screen">
+<div id="qr" x-show="page=='#qr'" class="p-4 flex flex-col items-center bg-green-50 h-screen" x-cloak>
     <div class=""><span x-text="cst"></span></div>
     <div id="qr-content" class="w-7/12">
         <div id="bm"></div>
-        <div id="qrcode" class="w-7/12" x-on:click="view='details'"></div>
+        <div id="qrcode" class="w-7/12" x-on:click="changePage('details')"></div>
     </div>
     <div id="info">
         <p class="text-xs mt-2">Tap the QR-code to enlarge</p>
@@ -210,7 +227,7 @@
             <p class="text-xs">What I want ? </p>
             <p><span x-text="pass.purpose"></span></p>
         </div>
-        <div>
+        <div x-show="pass.message" x-cloak>
             <p class="text-xs">My Personal Message</p>
             <p><span x-text="pass.message"></span></p>
         </div>
@@ -219,14 +236,67 @@
         <a href="#" x-on:click="view='form'">Create another QR code</a>
     </div>
 </div>
-<div id="qr-detail" x-show="view=='details'" class="p-4 flex flex-col h-screen items-center">
+<div id="qr-detail" x-show="page=='#details'" class="p-4 flex flex-col h-screen items-center" x-cloak>
     <div id="qr-content-large" class="mt-20">
         <div id="bm-large"></div>
         <div id="qrcode-large" class="w-11/12"></div>
     </div>
     <div class="mt-5">
-        <a href="#" x-on:click="view='qr'" class="font-bold">Back to overview</a>
+        <a href="#" x-on:click="changePage('qr')" class="font-bold">Back to overview</a>
     </div>
 </div>
+<div id="library" x-show="page=='#library'" class="p-4 flex flex-col h-screen items-center" x-cloak>
+    <h1 class="border-b-2 border-blue-300">My Passes</h1>
+    <template x-for="(p,index) in library">
+        <div class="w-11/12 mt-5 p-3 bg-gray-100 relative overflow-hidden rounded-xl flex flex-col"
+             x-on:click="showPass(index); location.hash='qr'" x-on:swipe="alert('qsdqs');">
+            <div class="mb-2 flex flex-row justify-between">
+                <div>
+                    <p><span x-text="p.firstName"></span> <span x-text="p.lastName"></span></p>
+                </div>
+                <div class="bg-white rounded-full w-6 h-6 flex justify-center items-center text-center p-4">
+                    <span class="material-icons" style="font-size: 18px;">check</span>
+                </div>
+            </div>
+            <div class="mb-2 flex flex-row justify-between">
+                <div>
+                    <p><span class="font-bold" x-text="p.purpose"></span><br/><span class="text-sm" x-text="formatDate(p.creationDate,'MMMM Mo YYYY kk:mm')"></span></p>
+                </div>
+                <div class="mt-3">
+                    <span class="material-icons text-gray-400">chevron_right</span>
+                </div>
+            </div>
+        </div>
+    </template>
+    <div class="mt-3" x-show="library.length > 0" x-cloak>
+        <a href="#library" x-on:click="library = []">Delete All</a>
+    </div>
+    <div class="mt-3" x-show="library.length == 0" x-cloak>
+        You don't have any saved passes.
+    </div>
+</div>
+<div class="w-full h-screen">
+    <!-- <section id="bottom-navigation" class="md:hidden block fixed inset-x-0 bottom-0 z-10 bg-white shadow"> // if shown only tablet/mobile-->
+    <section id="bottom-navigation" class="block fixed inset-x-0 bottom-0 z-10 bg-white shadow">
+        <div id="tabs" class="flex justify-between">
+            <a href="/generate.html#library"
+               class="w-full focus:text-teal-500 hover:text-teal-500 justify-center inline-block text-center pt-2 pb-1">
+                <span class="material-icons" style="font-size: 24px;">history</span>
+                <span class="tab tab-home block text-xs">My Passes</span>
+            </a>
+            <a href="/generate.html"
+               class="w-full focus:text-teal-500 hover:text-teal-500 justify-center inline-block text-center pt-2 pb-1">
+                <span class="material-icons" style="font-size: 24px;">add</span>
+                <span class="tab tab-explore block text-xs">Create</span>
+            </a>
+            <a href="/"
+               class="w-full focus:text-teal-500 hover:text-teal-500 justify-center inline-block text-center pt-2 pb-1">
+                <span class="material-icons" style="font-size: 24px;">qr_code_scanner</span>
+                <span class="tab tab-home block text-xs">Scan</span>
+            </a>
+        </div>
+    </section>
+</div>
+
 </body>
 </html>
