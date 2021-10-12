@@ -137,7 +137,8 @@ function decodeDGC(data) {
             "f": [{
                 "t": pass.type,
                 "p": pass.purpose,
-                "dt": pass.date
+                "dt": pass.date,
+                "m": pass.message
             }],
             "dob": moment().format('YYYY-MM-DD'),
             "nam": {

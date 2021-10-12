@@ -41,6 +41,7 @@
                     "firstName": "",
                     "lastName": "",
                     "purpose": "",
+                    "message": ""
                 },
                 "example": "Beer",
                 "view": "form",
@@ -175,6 +176,13 @@
             </label>
             <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                    id="purpose" type="text" placeholder="Beer" x-model="pass.purpose">
+        </div>
+        <div class="mb-6">
+            <label class="block text-gray-700 text-sm font-bold mb-2" for="purpose">
+                What do I want ?
+            </label>
+            <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                   id="message" type="text" placeholder="Please, please, let me in !!" x-model="pass.message">
         </div>
         <div class="mt-2" x-show="complete()">
             <a href="#" x-on:click="generate"
