@@ -1,4 +1,4 @@
-window.$ = require('jquery');
+//window.$ = require('jquery');
 const base45 = require('base45');
 const cbor = require('cbor-web');
 const pako = require('pako');
