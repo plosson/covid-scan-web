@@ -58,7 +58,9 @@
                     "message": ""
                 },
                 "editablePass": -1,
-                "example": "Beer",
+                "exampleIndex":0,
+                "examples": ["Beer","Sleep","Dürum","Wine","Gin","Bathroom","Tennis","Church","Flight","Be","Stay"],
+                "example": "",
                 "page": location.hash,
                 "complete": function () {
                     return this.pass.firstName && this.pass.lastName && this.pass.purpose;
@@ -131,23 +133,19 @@
                     return dgc.formatDate(date, format);
                 },
                 "init": function () {
+                    this.exampleIndex = getRandomInt(this.examples.length);
+                    this.example = this.examples[this.exampleIndex];
                     setInterval(function () {
-                        //this.exampleIndex = (this.exampleIndex + 1) % this.examples.length;
-                        this.example = dgc.randomName();
+                        this.exampleIndex = (this.exampleIndex + 1) % this.examples.length;
+                        this.example = this.examples[this.exampleIndex];
+                        //this.example = dgc.randomName();
                     }.bind(this), 2000);//run this thang every 2 seconds
                 },
             }
         }
 
-        function makeid(length) {
-            var result = '';
-            var characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-            var charactersLength = characters.length;
-            for (var i = 0; i < length; i++) {
-                result += characters.charAt(Math.floor(Math.random() *
-                    charactersLength));
-            }
-            return result;
+        function getRandomInt(max) {
+            return Math.floor(Math.random() * max);
         }
     </script>
     <style type="text/css">
