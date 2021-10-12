@@ -34,7 +34,6 @@
 
 <script src="//cdn.rawgit.com/davidshimjs/qrcodejs/gh-pages/qrcode.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bodymovin/5.7.13/lottie.min.js" type="text/javascript"></script>
-<script src="//unpkg.com/tinygesture" type="text/javascript"></script>
 <script src="//unpkg.com/@alpinejs/persist@3.x.x/dist/cdn.min.js" type="text/javascript" defer></script>
 <script src="//unpkg.com/alpinejs@3.x.x" type="text/javascript" defer></script>
 
@@ -51,6 +50,7 @@
                     "purpose": "",
                     "message": ""
                 },
+                "editablePass": -1,
                 "example": "Beer",
                 "page": location.hash,
                 "complete": function () {
@@ -66,7 +66,11 @@
                 "changePage": function (page) {
                     location.hash = page;
                 },
-                "showPass": function (index) {
+                "deletePass": function(index) {
+                    this.library.splice(index, 1);
+                    return false;
+                },
+                "showPass": function (index, changePage) {
                     this.pass = this.library[index];
                     console.log(this.pass);
                     const text = dgc.encodeDGC(this.pass);
@@ -105,11 +109,15 @@
                         autoplay: true,
                         path: '/public/json/qr_code.json'
                     });
+                    if (changePage)
+                    {
+                        location.hash = 'qr';
+                    }
                 },
                 "generate": function () {
                     this.pass.creationDate = new Date();
                     this.library.push(JSON.parse(JSON.stringify(this.pass)));
-                    this.showPass(this.library.length - 1);
+                    this.showPass(this.library.length - 1, false);
                 },
                 "formatDate": function(date, format){
                     return dgc.formatDate(date, format);
@@ -249,13 +257,20 @@
     <h1 class="border-b-2 border-blue-300">My Passes</h1>
     <template x-for="(p,index) in library">
         <div class="w-11/12 mt-5 p-3 bg-gray-100 relative overflow-hidden rounded-xl flex flex-col"
-             x-on:click="showPass(index); location.hash='qr'" x-on:swipe="alert('qsdqs');">
+             :class="editablePass === index ? 'border-gray-500 border-4' : ''"
+             x-on:click="editablePass === index ? showPass(index, true) : editablePass = index">
             <div class="mb-2 flex flex-row justify-between">
                 <div>
-                    <p><span x-text="p.firstName"></span> <span x-text="p.lastName"></span></p>
+                    <p><img class="inline" src="/public/img/avatar_success_light.svg" width="24px">
+                        <span x-text="index"></span> <span x-text="p.firstName"></span> <span x-text="p.lastName"></span></p>
                 </div>
-                <div class="bg-white rounded-full w-6 h-6 flex justify-center items-center text-center p-4">
+                <div class="bg-white rounded-full w-6 h-6 flex justify-center items-center text-center p-4"
+                     x-cloak x-show="editablePass!=index">
                     <span class="material-icons" style="font-size: 18px;">check</span>
+                </div>
+                <div class="bg-red-500 rounded-full w-6 h-6 flex justify-center items-center text-center p-4" x-cloak x-show="editablePass==index"
+                     @click.stop="deletePass(index);">
+                    <span class="material-icons text-white" style="font-size: 18px;">clear</span>
                 </div>
             </div>
             <div class="mb-2 flex flex-row justify-between">
