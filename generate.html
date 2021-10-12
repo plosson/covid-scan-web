@@ -50,7 +50,6 @@
                 },
                 "showPass": function (index, changePage) {
                     this.pass = this.library[index];
-                    console.log(this.pass);
                     const text = dgc.encodeDGC(this.pass);
                     document.getElementById("qrcode").innerHTML = "";
                     document.getElementById("qrcode-large").innerHTML = "";
@@ -94,6 +93,8 @@
                 },
                 "generate": function () {
                     this.pass.creationDate = new Date();
+                    this.pass.date = this.formatDate(this.pass.creationDate, 'YYYY-MM-DD')
+                    this.pass.type = this.pass.purpose.substr(0, 1).toUpperCase() + "ST"
                     this.library.push(JSON.parse(JSON.stringify(this.pass)));
                     this.showPass(this.library.length - 1, false);
                 },
@@ -253,7 +254,9 @@
             </div>
             <div class="mb-2 flex flex-row justify-between">
                 <div>
-                    <p><span class="font-bold" x-text="p.purpose"></span><br/><span class="text-sm" x-text="formatDate(p.creationDate,'MMMM Mo YYYY kk:mm')"></span></p>
+                    <p><span class="font-bold" x-text="p.type"></span> - <span class="font-bold" x-text="p.purpose"></span>
+                        <br/>
+                        <span class="text-sm" x-text="formatDate(p.creationDate,'MMMM Mo YYYY kk:mm')"></span></p>
                 </div>
                 <div class="mt-3">
                     <span class="material-icons text-gray-400">chevron_right</span>
