@@ -34,13 +34,17 @@
     <script src="/bundle.js"></script>
     <script src="//cdn.rawgit.com/davidshimjs/qrcodejs/gh-pages/qrcode.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bodymovin/5.7.13/lottie.min.js" type="text/javascript"></script>
+    <script src="//unpkg.com/@alpinejs/persist@3.x.x/dist/cdn.min.js" type="text/javascript" defer></script>
+    <script src="//unpkg.com/alpinejs@3.x.x" type="text/javascript" defer></script>
     <script type="text/javascript">
         function data() {
             return {
+                "library": this.$persist([]),
                 "pass": {
-                    "firstName": "",
-                    "lastName": "",
+                    "firstName": this.$persist(""),
+                    "lastName": this.$persist(""),
                     "purpose": "",
+                    "message": ""
                 },
                 "example": "Beer",
                 "view": "form",
@@ -55,6 +59,7 @@
                     }
                 },
                 "generate": function () {
+                    this.library.push(this.pass);
                     const text = dgc.encodeDGC(this.pass);
                     document.getElementById("qrcode").innerHTML = "";
                     document.getElementById("qrcode-large").innerHTML = "";
@@ -93,14 +98,6 @@
                     });
 
                     this.view = 'qr';
-                    /*setTimeout(() => {
-                        let qelem = document.querySelector('#qrcode img')
-                        let dlink = document.querySelector('#qrdl')
-                        let qr = qelem.getAttribute('src');
-                        dlink.setAttribute('href', qr);
-                        dlink.setAttribute('download', this.cst() + ".png");
-                        dlink.removeAttribute('hidden');
-                    }, 100);*/
                 },
                 "init": function () {
                     setInterval(function () {
@@ -122,7 +119,6 @@
             return result;
         }
     </script>
-    <script src="//unpkg.com/alpinejs" type="text/javascript" defer></script>
     <style type="text/css">
         #qr-content{
             max-height: 150px;
@@ -151,30 +147,37 @@
 
 <body x-data="data" id="body" class="flex flex-col h-full">
 <div id="form" class="w-full" x-show="view=='form'">
-    <form class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 flex flex-col items-center">
+    <form class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 flex flex-col">
         <div class="mb-4">
             <h1>Generate your <span x-text="example" class="underline font-bold"></span> Safe Ticket</h1>
         </div>
         <div class="mb-4">
             <label class="block text-gray-700 text-sm font-bold mb-2" for="firstName">
-                First Name
+                First Name (*)
             </label>
             <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                    id="firstName" type="text" placeholder="John" x-model="pass.firstName">
         </div>
         <div class="mb-4">
             <label class="block text-gray-700 text-sm font-bold mb-2" for="lastName">
-                Last Name
+                Last Name (*)
             </label>
             <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                    id="lastName" type="text" placeholder="Denver" x-model="pass.lastName">
         </div>
         <div class="mb-6">
             <label class="block text-gray-700 text-sm font-bold mb-2" for="purpose">
-                What do I want ?
+                What do I want ? (*)
             </label>
             <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                    id="purpose" type="text" placeholder="Beer" x-model="pass.purpose">
+        </div>
+        <div class="mb-6">
+            <label class="block text-gray-700 text-sm font-bold mb-2" for="purpose">
+                My personal message to the scanner !
+            </label>
+            <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                   id="message" type="text" placeholder="Please, please, let me in !!" x-model="pass.message">
         </div>
         <div class="mt-2" x-show="complete()">
             <a href="#" x-on:click="generate"
@@ -203,9 +206,13 @@
             <p class="text-xs">Given name</p>
             <p><span x-text="pass.firstName"></span></p>
         </div>
-        <div>
+        <div class="mb-2">
             <p class="text-xs">What I want ? </p>
             <p><span x-text="pass.purpose"></span></p>
+        </div>
+        <div>
+            <p class="text-xs">My Personal Message</p>
+            <p><span x-text="pass.message"></span></p>
         </div>
     </div>
     <div class="mt-3">
