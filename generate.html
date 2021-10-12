@@ -257,12 +257,12 @@
     <h1 class="border-b-2 border-blue-300">My Passes</h1>
     <template x-for="(p,index) in library">
         <div class="w-11/12 mt-5 p-3 bg-gray-100 relative overflow-hidden rounded-xl flex flex-col"
-             :class="editablePass === index ? 'border-gray-500 border-4' : ''"
+             :class="editablePass === index ? 'border-gray-500 border-2' : ''"
              x-on:click="editablePass === index ? showPass(index, true) : editablePass = index">
             <div class="mb-2 flex flex-row justify-between">
                 <div>
                     <p><img class="inline" src="/public/img/avatar_success_light.svg" width="24px">
-                        <span x-text="index"></span> <span x-text="p.firstName"></span> <span x-text="p.lastName"></span></p>
+                        <span x-text="p.firstName"></span> <span x-text="p.lastName"></span></p>
                 </div>
                 <div class="bg-white rounded-full w-6 h-6 flex justify-center items-center text-center p-4"
                      x-cloak x-show="editablePass!=index">
