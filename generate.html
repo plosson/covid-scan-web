@@ -79,8 +79,8 @@
                     this.library.splice(index, 1);
                     return false;
                 },
-                "showPass": function (index, changePage) {
-                    this.pass = this.library[index];
+                "showPass": function (pass, changePage) {
+                    this.pass = pass;
                     const text = dgc.encodeDGC(this.pass);
                     document.getElementById("qrcode").innerHTML = "";
                     document.getElementById("qrcode-large").innerHTML = "";
@@ -117,17 +117,14 @@
                         autoplay: true,
                         path: '/public/json/qr_code.json'
                     });
-                    if (changePage)
-                    {
-                        location.hash = 'qr';
-                    }
+                    window.location.href = "?p=" + dgc.encode64(JSON.stringify(this.pass)) + '#qr';
                 },
                 "generate": function () {
                     this.pass.creationDate = new Date();
                     this.pass.date = this.formatDate(this.pass.creationDate, 'YYYY-MM-DD')
                     this.pass.type = this.pass.purpose.substr(0, 1).toUpperCase() + "ST"
                     this.library.push(JSON.parse(JSON.stringify(this.pass)));
-                    this.showPass(this.library.length - 1, false);
+                    this.showPass(this.library[this.library.length - 1]);
                 },
                 "formatDate": function(date, format){
                     return dgc.formatDate(date, format);
@@ -140,6 +137,11 @@
                         this.example = this.examples[this.exampleIndex];
                         //this.example = dgc.randomName();
                     }.bind(this), 2000);//run this thang every 2 seconds
+                    const url = dgc.parseUrl(window.location.href);
+                    if (url.query.p)
+                    {
+                        this.showPass(JSON.parse(dgc.decode64(url.query.p)), true);
+                    }
                 },
             }
         }
@@ -211,7 +213,7 @@
                    id="message" type="text" placeholder="Please, please, let me in !!" x-model="pass.message">
         </div>
         <div class="mt-2" x-show="complete()">
-            <a href="#qr" x-on:click="generate"
+            <a href="" x-on:click="generate"
                class="content-center bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Generate
                 my <span
                         x-text="cst"></span></a>
@@ -222,7 +224,7 @@
     <div class=""><span x-text="cst"></span></div>
     <div id="qr-content" class="w-7/12">
         <div id="bm"></div>
-        <div id="qrcode" class="w-7/12" x-on:click="changePage('details')"></div>
+        <div id="qrcode" x-on:click="changePage('details')"></div>
     </div>
     <div id="info">
         <p class="text-xs mt-2">Tap the QR-code to enlarge</p>
@@ -253,7 +255,7 @@
 <div id="qr-detail" x-show="page=='#details'" class="p-4 flex flex-col h-screen items-center" x-cloak>
     <div id="qr-content-large" class="mt-20">
         <div id="bm-large"></div>
-        <div id="qrcode-large" class="w-11/12"></div>
+        <div id="qrcode-large" class="object-scale-down w-11/12"></div>
     </div>
     <div class="mt-5">
         <a href="#" x-on:click="changePage('qr')" class="font-bold">Back to overview</a>
@@ -264,7 +266,7 @@
     <template x-for="(p,index) in library">
         <div class="w-11/12 mt-5 p-3 bg-gray-100 relative overflow-hidden rounded-xl flex flex-col"
              :class="editablePass === index ? 'border-gray-500 border-2' : ''"
-             x-on:click="editablePass === index ? showPass(index, true) : editablePass = index">
+             x-on:click="editablePass === index ? showPass(library[index], true) : editablePass = index">
             <div class="mb-2 flex flex-row justify-between">
                 <div>
                     <p><img class="inline" src="/public/img/avatar_success_light.svg" width="24px">
