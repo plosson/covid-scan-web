@@ -4,6 +4,8 @@ const cbor = require('cbor-web');
 const pako = require('pako');
 const moment = require('moment');
 const faker = require('faker');
+const qs = require('query-string')
+import { Base64 } from 'js-base64';
 
 import './style.css';
 
@@ -110,6 +112,17 @@ function makeid(length) {
     return result;
 }
 
+function parseUrl(url){
+    return qs.parseUrl(url);
+}
+
+function decode64(value){
+    return Base64.decode(value);
+}
+function encode64(value){
+    return Base64.encodeURI(value);
+}
+
 function randomName() {
     return capitalizeFirstLetter(faker.commerce.product());
 }
@@ -205,7 +218,7 @@ function capitalizeFirstLetter(string) {
 }
 
 
-export {formatDate, randomName, decodeDGC, encodeDGC}
+export {encode64, decode64, parseUrl, formatDate, randomName, decodeDGC, encodeDGC}
 
 
 
