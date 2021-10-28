@@ -63,5 +63,6 @@ module.exports = {
         static: {
             directory: path.join(__dirname, './dist'),
         },
+	port: 31010
     },
 };

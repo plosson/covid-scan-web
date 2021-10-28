@@ -158,17 +158,13 @@ function decodeDGC(data) {
                 "m": pass.message
             }],
             "dob": moment().format('YYYY-MM-DD'),
-            "nam": {
-                "fn": pass.lastName,
-                "gn": pass.firstName,
-                "fnt": pass.lastName.toUpperCase(),
-                "gnt": pass.firstName.toUpperCase()
-            }
+            "nam": pass.nam
+
         };
         json.age = moment().diff(json.dob, 'years', false);
         json.dob_str = moment(json.dob).format('MMMM Do YYYY');
         json.f[0].daysAgo = moment().diff(json.f[0].dt, 'days', false)
-        return {"valid": true, "json": json};
+        return {"valid": true, "json": json, "text": data};
 
     } else if (prefix === "HC1") {
         // Remove `HC1:` from the string
