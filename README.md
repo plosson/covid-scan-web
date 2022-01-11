@@ -11,7 +11,7 @@ It does not perform any validation rule, so you can let everyone in (as you shou
 
 # Demo 
 
-Go to https://be.covid-scan.link 
+Go to https://covid-scan.link 
       
 # How to host it yourself 
              
