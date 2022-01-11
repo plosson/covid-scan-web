@@ -123,8 +123,8 @@
                     this.pass.creationDate = new Date();
                     this.pass.date = this.formatDate(this.pass.creationDate, 'YYYY-MM-DD')
                     this.pass.type = this.pass.purpose.substr(0, 1).toUpperCase() + "ST"
-                    this.library.push(JSON.parse(JSON.stringify(this.pass)));
-                    this.showPass(dgc.encodeDGC(this.library[this.library.length - 1]));
+                    this.library.push(dgc.encodeDGC(this.library[this.library.length - 1]));
+                    this.showPass(this.library[this.library.length - 1]);
                     return false;
                 },
                 "formatDate": function(date, format){
