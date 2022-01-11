@@ -124,7 +124,8 @@
                     this.pass.date = this.formatDate(this.pass.creationDate, 'YYYY-MM-DD')
                     this.pass.type = this.pass.purpose.substr(0, 1).toUpperCase() + "ST"
                     this.library.push(JSON.parse(JSON.stringify(this.pass)));
-                    this.showPass(this.library[this.library.length - 1]);
+                    this.showPass(dgc.encodeDGC(this.library[this.library.length - 1]));
+                    return false;
                 },
                 "formatDate": function(date, format){
                     return dgc.formatDate(date, format);
@@ -213,7 +214,7 @@
                    id="message" type="text" placeholder="Please, please, let me in !!" x-model="pass.message">
         </div>
         <div class="mt-2" x-show="complete()">
-            <a href="" x-on:click="generate"
+            <button x-on:click.prevent="generate"
                class="content-center bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Generate
                 my <span
                         x-text="cst"></span></a>
